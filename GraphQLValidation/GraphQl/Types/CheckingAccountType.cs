@@ -33,7 +33,7 @@ namespace GraphQLValidation.GraphQl.Types
                 .ResolveAsync(async ctx =>
             {
                 var dbContext = (Context)accessor.HttpContext.RequestServices.GetService(typeof(IContext));
-                return (await dbContext.Cashflows.Where(x => x.ProductId == Guid.Parse(ctx.Source.Id)).ToArrayAsync()).Select(x => (Cashflow)x);
+                return (await dbContext.Cashflows.Where(x => x.ProductId == ctx.Source.Id).ToArrayAsync()).Select(x => (Cashflow)x);
             });//.AuthorizeWith("AdminPolicy");
         }
     }

@@ -18,13 +18,13 @@ namespace GraphQLValidation
         {
             if (request.Headers.TryGetValue("x-user-id", out var userid))
             { 
-              UserId = userid;
+              UserId = Guid.Parse(userid);
             }
 
             User = request.HttpContext.User;
         }
         public ClaimsPrincipal User { get; set; }
-        public string UserId { get; set; }
-        public HashSet<Guid> RequestedProductIds { get; set; } = new HashSet<Guid>();
+        public Guid UserId { get; set; }
+        public HashSet<string> RequestedProductIds { get; set; } = new HashSet<string>();
     }
 }

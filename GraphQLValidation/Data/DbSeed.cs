@@ -40,10 +40,12 @@ namespace GraphQLValidation.Data
             _context.SaveChanges();
         }
 
+        
         private void BuildCheckingAccounts()
         {
             _context.CheckingAccounts.AddRange(new CheckingAccount
             {
+                Id = "checking1",
                 CurrentBalance = 43726.47M,
                 FeePerMonth = 25,
                 FinancialInstitution = "GraphBank",
@@ -51,6 +53,7 @@ namespace GraphQLValidation.Data
                 UserProductId = 1
             }, new CheckingAccount
             {
+                Id = "checking2",
                 CurrentBalance = 4326.47M,
                 FeePerMonth = 5,
                 FinancialInstitution = "BusinessBank",
@@ -58,12 +61,14 @@ namespace GraphQLValidation.Data
                 UserProductId = 2
             }, new CheckingAccount
             {
+                Id = "checking3",
                 CurrentBalance = -10.99M,
                 FinancialInstitution = "GraphBank",
                 IsGoodStanding = false,
                 UserProductId = 3
             }, new CheckingAccount
             {
+                Id = "checking4",
                 CurrentBalance = 27.32M,
                 FeePerMonth = 25,
                 FinancialInstitution = "OtherBank",
@@ -76,6 +81,7 @@ namespace GraphQLValidation.Data
         {
             _context.CreditLines.AddRange(new CreditLine
             {
+                Id = "credit1",
                 UserProductId = 5,
                 Creditor = "PersonBank",
                 CurrentBalance = 2347.2M,
@@ -84,6 +90,7 @@ namespace GraphQLValidation.Data
                 Line = 10000
             }, new CreditLine
             {
+                Id = "credit2",
                 UserProductId = 6,
                 Creditor = "GraphBank",
                 CurrentBalance = 12347.2M,
@@ -92,6 +99,7 @@ namespace GraphQLValidation.Data
                 Line = 20000
             }, new CreditLine
             {
+                Id = "credit3",
                 UserProductId = 7,
                 Creditor = "BusinessBank",
                 CurrentBalance = 2347.2M,
@@ -100,6 +108,7 @@ namespace GraphQLValidation.Data
                 Line = 15000
             }, new CreditLine
             {
+                Id = "credit4",
                 UserProductId = 8,
                 Creditor = "BusinessBank",
                 CurrentBalance = 7347.2M,
@@ -108,6 +117,7 @@ namespace GraphQLValidation.Data
                 Line = 15000
             }, new CreditLine
             {
+                Id = "credit5",
                 UserProductId = 9,
                 Creditor = "CreditBank",
                 CurrentBalance = 7347.2M,
@@ -121,6 +131,7 @@ namespace GraphQLValidation.Data
         {
             _context.Loans.AddRange(new Loan
             {
+                Id = "loan1",
                 UserProductId = 10,
                 CurrentBalance = 23254.73M,
                 Lender = "IronBank",
@@ -130,6 +141,7 @@ namespace GraphQLValidation.Data
                 TermMonths = 18
             }, new Loan
             {
+                Id = "loan2",
                 UserProductId = 11,
                 CurrentBalance = 1323.12M,
                 Lender = "IronBank",
@@ -139,6 +151,7 @@ namespace GraphQLValidation.Data
                 TermMonths = 6
             }, new Loan
             {
+                Id = "loan3",
                 UserProductId = 12,
                 CurrentBalance = 13623.12M,
                 Lender = "SwissBank",
@@ -149,7 +162,7 @@ namespace GraphQLValidation.Data
             });
         }
 
-        private IEnumerable<Cashflow> BuildCashflows(Guid productId)
+        private IEnumerable<Cashflow> BuildCashflows(string productId)
         {
             return new[]
             {

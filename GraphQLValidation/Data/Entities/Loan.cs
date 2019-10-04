@@ -1,15 +1,12 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GraphQLValidation.Data.Entities
 {
     public class Loan
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        // this would normally be a Guid, but the examples are much easy to follow along with if its an string
+        public string Id { get; set; }
         public int UserProductId { get; set; }
         public string Lender { get; set; } = "";
         public decimal CurrentBalance { get; set; }

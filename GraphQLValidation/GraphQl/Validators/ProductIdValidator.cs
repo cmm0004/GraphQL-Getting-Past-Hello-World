@@ -3,8 +3,10 @@ using GraphQL.Language.AST;
 using GraphQL.Types;
 using GraphQL.Validation;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GraphQL;
 
 namespace GraphQLValidation.GraphQl.Validators
 {
@@ -21,32 +23,28 @@ namespace GraphQLValidation.GraphQl.Validators
             return new EnterLeaveListener(listener =>
                 {
                     listener.Match<Argument>(arg =>
-                        ((GraphQLUserContext) context.UserContext).RequestedProductIds.UnionWith(GetUpasInArgs(new Arguments {arg}, context, variableValues)));
+                        ((GraphQLUserContext) context.UserContext).RequestedProductIds.UnionWith(GetProductIdsFromArgs(new Arguments {arg}, context, variableValues)));
                 }
             );
         }
 
-        private IEnumerable<Guid> GetUpasInArgs(Arguments args, ValidationContext context, Lazy<Variables> variableValues)
+        private IEnumerable<string> GetProductIdsFromArgs(Arguments args, ValidationContext context, Lazy<Variables> variableValues)
         {
             var argValues = new Lazy<Dictionary<string, object>>(() => ExecutionHelper.GetArgumentValues(
                 context.Schema,
                 new QueryArguments(
                     context.TypeInfo.GetFieldDef()?.Arguments
-                        .Where(arg => arg.Name == "productId")
+                        .Where(arg => arg.Name == "productIds")
                     ?? Enumerable.Empty<QueryArgument>()
                 ),
                 args,
                 variableValues.Value));
+            if (argValues.Value.ContainsKey("productIds"))
+            {
+                return ((IEnumerable) argValues.Value["productIds"]).Cast<string>();
+            }
 
-            return args.SelectMany(arg => arg.Name switch
-                {
-                "productId" => argValues.Value?.GetValueOrDefault(arg.Name) switch
-                    {
-                    Guid val => Enumerable.Repeat(val, 1),
-                    _ => Enumerable.Empty<Guid>(),
-                    },
-                _ => Enumerable.Empty<Guid>(),
-                });
+            return Enumerable.Empty<string>();
         }
 
     }
