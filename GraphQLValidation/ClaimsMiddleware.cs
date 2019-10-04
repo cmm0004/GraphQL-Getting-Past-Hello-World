@@ -21,6 +21,7 @@ namespace GraphQLValidation
                 new Claim("role", "NotAnAdmin")
             };
 
+            httpContext.Request.Headers["x-user-id"] = "38DC888A-90C8-4180-90FA-068089D504AD";
             var appIdentity = new ClaimsIdentity(claims);
             httpContext.User.AddIdentity(appIdentity);
 

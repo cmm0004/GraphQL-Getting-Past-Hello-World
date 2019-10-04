@@ -1,14 +1,21 @@
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 using GraphQL;
 using GraphQL.Authorization;
+using GraphQL.Instrumentation;
 using GraphQL.Server;
+using GraphQL.Server.Transports.AspNetCore;
 using GraphQL.Types;
 using GraphQL.Validation;
+using GraphQLValidation.Data;
 using GraphQLValidation.GraphQl;
+using GraphQLValidation.GraphQl.FieldMiddleware;
+using GraphQLValidation.GraphQl.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -28,7 +35,6 @@ namespace GraphQLValidation
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
@@ -38,6 +44,7 @@ namespace GraphQLValidation
             services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AddSingleton<ISchema, RootSchema>();
 
+           
             services.AddGraphQL(o =>
                 {
                     o.EnableMetrics = true;
@@ -45,11 +52,12 @@ namespace GraphQLValidation
                 })
                 .AddGraphTypes();
 
+           
             // auth stuff
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<IAuthorizationEvaluator, AuthorizationEvaluator>();
-            services.AddTransient<IValidationRule, AuthorizationValidationRule>();
-
+            //services.AddTransient<IValidationRule, AuthorizationValidationRule>();
+           
             services.TryAddSingleton(s =>
             {
                 var authSettings = new AuthorizationSettings();
@@ -59,13 +67,30 @@ namespace GraphQLValidation
                 return authSettings;
             });
 
-            
+            services.AddEntityFrameworkSqlite()
+                .AddDbContext<IContext, Context>(ops => ops.UseSqlite(@"Data Source=.\Data\Data.db"),
+                    ServiceLifetime.Transient);
+           
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+
+            services.AddScoped<ExecutionOptions>(s => new ExecutionOptions
+            {
+                Schema = s.GetRequiredService<ISchema>(),
+                ValidationRules = s.GetRequiredService<IEnumerable<IValidationRule>>().Concat(DocumentValidator.CoreRules()),
+                FieldMiddleware = new FieldMiddlewareBuilder().Use<AuthorizeMiddleware>(),
+                EnableMetrics = true,
+                ExposeExceptions = !_env.IsProduction()
+            });
+            //services.AddSingleton<IValidationRule, BoundedAuthValidationRule>();
             //services.AddScoped<IDocumentExecutionListener, AccessVerificationDocumentListener>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
+            //put some fake auth on the user
             app.UseMiddleware<ClaimsMiddleware>();
 
 
