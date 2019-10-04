@@ -10,6 +10,10 @@ using GraphQL;
 
 namespace GraphQLValidation.GraphQl.Validators
 {
+    /*
+     * 'validator' is a strong word, the validators are really just event handlers, you could execute any arbitrary function in here on a node
+     */
+
     public class ProductIdValidator : IValidationRule
     {
         public INodeVisitor Validate(ValidationContext context)
@@ -22,6 +26,7 @@ namespace GraphQLValidation.GraphQl.Validators
 
             return new EnterLeaveListener(listener =>
                 {
+                    // match a node type, arguments are considered a node the same as everything else in the query.
                     listener.Match<Argument>(arg =>
                         ((GraphQLUserContext) context.UserContext).RequestedProductIds.UnionWith(GetProductIdsFromArgs(new Arguments {arg}, context, variableValues)));
                 }
@@ -39,6 +44,7 @@ namespace GraphQLValidation.GraphQl.Validators
                 ),
                 args,
                 variableValues.Value));
+
             if (argValues.Value.ContainsKey("productIds"))
             {
                 return ((IEnumerable) argValues.Value["productIds"]).Cast<string>();
