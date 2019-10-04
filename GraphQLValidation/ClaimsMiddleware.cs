@@ -16,11 +16,13 @@ namespace GraphQLValidation
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
+            // setting a fake role as an example
             var claims = new List<Claim>
             {
                 new Claim("role", "NotAnAdmin")
             };
 
+            // normally this would come in on the request, but i think its easier to run this example project if you dont also have to set up a contrived request to get it to work.
             httpContext.Request.Headers["x-user-id"] = "38DC888A-90C8-4180-90FA-068089D504AD";
             var appIdentity = new ClaimsIdentity(claims);
             httpContext.User.AddIdentity(appIdentity);

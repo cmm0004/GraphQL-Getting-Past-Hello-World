@@ -4,7 +4,6 @@ using GraphQLValidation.GraphQl.Models;
 using GraphQLValidation.GraphQl.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -47,9 +46,10 @@ namespace GraphQLValidation.GraphQl
                 .ResolveAsync(async ctx =>
             {
                 var dbContext = (Context)accessor.HttpContext.RequestServices.GetService(typeof(IContext));
-                var ids = ctx.GetArgument<Guid[]>("productId", new Guid[0]);
 
-                return (await dbContext.Cashflows.Where(x => ids.Contains(x.ProductId)).ToArrayAsync()).Select(x => (Cashflow)x);
+                return (await dbContext.Cashflows.Where(x => ((GraphQLUserContext)ctx.UserContext).RequestedProductIds.Contains(x.ProductId))
+                    .ToArrayAsync())
+                    .Select(x => (Cashflow)x);
             });
         }
     }
