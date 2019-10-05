@@ -14,17 +14,6 @@ namespace GraphQLValidation
      */
     public class GraphQLUserContext : IProvideClaimsPrincipal
     {
-        public GraphQLUserContext(HttpRequest request)
-        {
-            if (request.Headers.TryGetValue("x-user-id", out var userid))
-            { 
-              UserId = Guid.Parse(userid);
-            }
-
-            User = request.HttpContext.User;
-        }
         public ClaimsPrincipal User { get; set; }
-        public Guid UserId { get; set; }
-        public HashSet<string> RequestedProductIds { get; set; } = new HashSet<string>();
     }
 }

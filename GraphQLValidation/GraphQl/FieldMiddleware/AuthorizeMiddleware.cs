@@ -14,7 +14,8 @@ namespace GraphQLValidation.GraphQl.FieldMiddleware
         {
             if (context.FieldDefinition.RequiresAuthorization())
             {
-                var err = new ExecutionError($"not authorized to access {context.ParentType.Name} : {context.FieldName}");
+                var err = new ExecutionError(
+                    $"not authorized to access {context.FieldName}");
                
                 context.Errors.Add(err);
                 return Task.FromResult<object>(null);
