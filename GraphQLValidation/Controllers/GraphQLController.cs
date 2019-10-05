@@ -34,7 +34,7 @@ namespace Importer.Provider.Data.GraphQL
             }
 
             _options.Query = query.Query;
-            _options.UserContext = new GraphQLUserContext(Request);
+            _options.UserContext = new GraphQLUserContext();
 
             var result = await _documentExecuter.ExecuteAsync(_options);
 

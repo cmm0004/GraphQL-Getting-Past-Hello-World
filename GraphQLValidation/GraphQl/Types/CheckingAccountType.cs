@@ -17,13 +17,12 @@ namespace GraphQLValidation.GraphQl.Types
         {
             Name = "CheckingAccount";
 
+            //object level checks
             //this.AuthorizeWith("AdminPolicy");
             Field(x => x.UserProductId);
             Field(x => x.Id);
-            Field<DecimalGraphType>().Name("currentBalance").Resolve(ctx =>
-            {
-                return ctx.Source.CurrentBalance;
-            }).AuthorizeWith("AdminPolicy");
+            // field level granularity also includes any child nodes of ObjectGraphType fields
+            Field(x => x.CurrentBalance).AuthorizeWith("AdminPolicy");
             Field(x => x.FeePerMonth);
             Field(x => x.FinancialInstitution);
             Field(x => x.IsGoodStanding);
@@ -34,7 +33,7 @@ namespace GraphQLValidation.GraphQl.Types
             {
                 var dbContext = (Context)accessor.HttpContext.RequestServices.GetService(typeof(IContext));
                 return (await dbContext.Cashflows.Where(x => x.ProductId == ctx.Source.Id).ToArrayAsync()).Select(x => (Cashflow)x);
-            });//.AuthorizeWith("AdminPolicy");
+            });
         }
     }
 }
