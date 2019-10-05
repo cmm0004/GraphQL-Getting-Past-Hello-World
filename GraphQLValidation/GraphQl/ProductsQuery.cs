@@ -50,9 +50,9 @@ namespace GraphQLValidation.GraphQl
             {
                 // it seems more correct to block entire object if any of the ids were unauthorized, though not the entire call.
                 // nothing stopping you from just getting items for the ids that are valid, though would likely lead to some client confusion
-               
+
                 var args = ctx.GetArgument("productIds", new List<string>());
-                var validated = ((GraphQLUserContext) ctx.UserContext).RequestedProductIds;
+                var validated = ((GraphQLUserContext)ctx.UserContext).RequestedProductIds;
                 var diff = args.Where(p => !validated.Contains(p));
                 if (diff.Any())
                 {
