@@ -28,7 +28,8 @@ namespace GraphQLValidation.GraphQl.Validators
                 {
                     // match a node type, arguments are considered a node the same as everything else in the query.
                     listener.Match<Argument>(arg =>
-                        ((GraphQLUserContext) context.UserContext).RequestedProductIds.UnionWith(GetProductIdsFromArgs(new Arguments {arg}, context, variableValues)));
+                        ((GraphQLUserContext) context.UserContext).RequestedProductIds
+                        .UnionWith(GetProductIdsFromArgs(new Arguments {arg}, context, variableValues)));
                 }
             );
         }
