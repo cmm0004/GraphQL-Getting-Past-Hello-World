@@ -17,7 +17,7 @@ namespace GraphQLValidation.GraphQl.DocumentListeners
                 if (userContext.RequestedProductIds?.Any() ?? false)
                 {
                     // var isAllowed = httpClient.HeadAsync("userApi/<userid>/verify?productId=credit1,loan3...).IsSuccess()
-                    var isAllowed = false;
+                    var isAllowed = !userContext.RequestedProductIds.Any(x => x== "loan3");
                     if (!isAllowed)
                         validationResult.Errors.Add(
                             new ExecutionError(
