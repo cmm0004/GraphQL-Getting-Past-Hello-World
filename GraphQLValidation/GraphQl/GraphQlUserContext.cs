@@ -1,5 +1,6 @@
 ﻿using GraphQL.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace GraphQLValidation
 {
@@ -11,6 +12,10 @@ namespace GraphQLValidation
      */
     public class GraphQLUserContext : IProvideClaimsPrincipal
     {
+        public GraphQLUserContext(HttpRequest request)
+        {
+            User = request.HttpContext.User;
+        }
         public ClaimsPrincipal User { get; set; }
     }
 }
