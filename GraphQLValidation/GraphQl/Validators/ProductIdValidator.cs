@@ -45,7 +45,7 @@ namespace GraphQLValidation.GraphQl.Validators
                 args,
                 variableValues.Value));
 
-            if (argValues.Value.ContainsKey("productIds"))
+            if (argValues.IsValueCreated && argValues.Value.ContainsKey("productIds"))
             {
                 return ((IEnumerable) argValues.Value["productIds"]).Cast<string>();
             }
