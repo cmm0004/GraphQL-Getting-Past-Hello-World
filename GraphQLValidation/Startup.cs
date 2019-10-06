@@ -61,8 +61,8 @@ namespace GraphQLValidation
             services.TryAddSingleton(s =>
             {
                 var authSettings = new AuthorizationSettings();
-
-                authSettings.AddPolicy("AdminPolicy", _ => _.RequireClaim("role", "Admin"));
+                authSettings.AddPolicy("AdminPolicy", _ =>
+                    _.RequireClaim("role", "Admin"));
 
                 return authSettings;
             });

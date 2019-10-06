@@ -19,7 +19,7 @@ namespace GraphQLValidation
             // setting a fake role as an example
             var claims = new List<Claim>
             {
-                new Claim("role", "notAdmin")
+                new Claim("role", "NotAdmin")
             };
 
             // normally this would come in on the request, but i think its easier to run this example project if you dont also have to set up a contrived request to get it to work.

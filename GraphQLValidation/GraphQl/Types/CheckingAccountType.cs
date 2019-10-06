@@ -16,17 +16,13 @@ namespace GraphQLValidation.GraphQl.Types
         public CheckingAccountType( IHttpContextAccessor accessor)
         {
             Name = "CheckingAccount";
-
-            //object level checks
             //this.AuthorizeWith("AdminPolicy");
             Field(x => x.UserProductId);
             Field(x => x.Id);
-            // field level granularity also includes any child nodes of ObjectGraphType fields
             Field(x => x.CurrentBalance).AuthorizeWith("AdminPolicy");
             Field(x => x.FeePerMonth);
             Field(x => x.FinancialInstitution);
             Field(x => x.IsGoodStanding);
-
             Field<ListGraphType<CashflowType>>()
                 .Name("Cashflows")
                 .ResolveAsync(async ctx =>
